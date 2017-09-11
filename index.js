@@ -2,9 +2,6 @@ var moment = require('moment');
 
 var today = moment().format('YYYY-MM-DD');
 
-var reg2 = /([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8])))/;
-var s1 = 'U002 2017-09-22 20:00~22:00 A';
-var s2 = 'U002 2017-09-22 20:00~22:00 A C';
 var userInput = [];
 var output = [{ A: [] }, { B: [] }, { C: [] }, { D: [] }];
 
@@ -62,6 +59,11 @@ function testSite(string) {
 }
 
 function checkInput(string) {
+
+    if (string == '\n') {
+        return;
+    }
+
     var str = string.trim();
     var arr = str.split(' ');
     var bool = isWeekDay();
@@ -98,17 +100,21 @@ function checkInput(string) {
                         if (~cancel) {
                             return index;
                         }
-                    }).find(item => item);
+                    }).find(k => k);
 
                     var fee = calcuMoney(...testTimeFragment(arr[2]), bool);
+
                     if (bool) {
                         fee = fee * 0.25;
                     } else {
                         fee = fee * 0.5;
                     }
+
+                    replacedItemIndex = replacedItemIndex || 0;
                     item[key][replacedItemIndex] = [arr[1], arr[2], '违约金', fee + '元'].join(' ');
                 }
-            })
+            });
+
             return 'Success: the booking is accepted!'
         } else {
             return 'Error: the booking is invalid!'
@@ -246,27 +252,41 @@ function calcuTotalMoney(output) {
     return totalMoney;
 }
 
+output.forEach(item => {
+    var key = Object.keys(item)[0];
+    item[key].sort((a, b) => {
+        var aArr = a.split(' '),
+            bArr = b.split(' ');
+        var aTime = [aArr[0], aArr[1]].join(' '),
+            bTime = [bArr[0], bArr[1]].join(' ');
+        var isBefore = moment(aTime).isBefore(bTime);
+
+        return isBefore;
+    });
+});
+
+console.log(output);
+
 function formatOutput(output) {
-    var str = '收入汇总\n';
-    str += '---\n';
+    var str = '\n> 收入汇总\n';
+    str += '> ---\n';
 
     output.forEach(item => {
         var key = Object.keys(item)[0];
-        str += '场地:' + key + '\n';
+        str += '> 场地:' + key + '\n';
 
         item[key].forEach(i => {
-            str += i + '\n';
+            str += '> ' + i + '\n';
         });
         if (key == 'D') {
-            str += '小计:' + item['total' + key] + '元\n';
+            str += '> 小计: ' + item['total' + key] + '元\n';
         } else {
-            str += '小计:' + item['total' + key] + '元\n\n';
+            str += '> 小计: ' + item['total' + key] + '元\n>\n';
         }
     });
 
-    str += '---\n';
-    str += '总计:' + calcuTotalMoney(output) + '元';
-    console.log(str);
+    str += '> ---\n';
+    str += '> 总计: ' + calcuTotalMoney(output) + '元';
     return str;
 }
 
