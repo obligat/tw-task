@@ -2,8 +2,6 @@ var repl = require('repl');
 
 var method = require('./index.js');
 
-var msg = 'message';
-
 const r = repl.start({
     prompt: '',
     eval: myEval

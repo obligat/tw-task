@@ -68,13 +68,32 @@ function checkInput(string) {
     var arr = str.split(' ');
     var bool = isWeekDay();
 
-    if (arr.length == 4) {
+    if (arr.length === 4) {
         if (isValidUserId(arr[0]) && isValidDate(arr[1]) && testTimeFragment(arr[2]) && testSite(arr[3])) {
+
+            var timeFrag = testTimeFragment(arr[2]);
+
+            for(var i = 0; i<userInput.length;i++){
+                var isExistDate = userInput[i].indexOf(arr[1]);
+                var isSameSite = userInput[i].indexOf(arr[3]);
+
+                if(~isExistDate && ~isSameSite){
+
+                    var existTimeFrag = testTimeFragment(userInput[i].split(' ')[2]);
+
+                    if(!(timeFrag[1] <= existTimeFrag[0] || timeFrag[0] >= existTimeFrag[1]) ){
+
+                        return 'Error: the booking conflicts with existing bookings!'
+                    }
+                }
+            }
+
+
             var money = calcuMoney(...testTimeFragment(arr[2]), bool);
             var outputStr = [arr[1], arr[2], money + '元'].join(' ');
             output.forEach(function(item) {
                 var key = Object.keys(item)[0];
-                if (key == arr[3]) {
+                if (key === arr[3]) {
                     item[key].push(outputStr);
                 }
             });
@@ -85,16 +104,24 @@ function checkInput(string) {
         } else {
             return 'Error: the booking is invalid!'
         }
-    } else if (arr.length == 5 && arr[4] == 'C') {
+    } else if (arr.length === 5 && arr[4] === 'C') {
+
+        var isCanceled = userInput.find(item=>item === string);
+        if(isCanceled){
+            return 'Error: the booking being cancelled does not exist!';
+        }
+
         var oldStr = string.slice(0, -2);
         var oldSite = arr[3];
         var isFind = userInput.indexOf(oldStr);
 
         if (~isFind) {
+            userInput[isFind] = string;
+
             output.forEach(function(item) {
                 var key = Object.keys(item)[0];
 
-                if (key == oldSite) {
+                if (key === oldSite) {
                     var replacedItemIndex = item[key].map(function(i, index) {
                         var cancel = i.indexOf([arr[1], arr[2]].join(' '));
                         if (~cancel) {
@@ -257,15 +284,19 @@ output.forEach(item => {
     item[key].sort((a, b) => {
         var aArr = a.split(' '),
             bArr = b.split(' ');
-        var aTime = [aArr[0], aArr[1]].join(' '),
-            bTime = [bArr[0], bArr[1]].join(' ');
+        var aTime = aArr[0],
+            bTime = bArr[0];
         var isBefore = moment(aTime).isBefore(bTime);
+        if(isBefore){
+            return isBefore;
+        }else if(moment(aTime).isBefore(bTime)){
+            return testTimeFragment(aArr[1])[0] >= testTimeFragment(bArr[1][0]);
+        }
 
         return isBefore;
+
     });
 });
-
-console.log(output);
 
 function formatOutput(output) {
     var str = '\n> 收入汇总\n';
@@ -300,4 +331,4 @@ module.exports = {
     calcuTotalMoney,
     checkInput,
     formatOutput
-}
+};
