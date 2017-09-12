@@ -15,7 +15,7 @@ function isValidDate(date) {
 
 function isWeekDay() {
     var day = moment().weekday();
-    if (day == 0 || day == 6) {
+    if (day === 0 || day === 6) {
         return true;
     } else {
         return false;
@@ -37,7 +37,7 @@ function testTimeFragment(string) {
         start = parseInt(start.split(':')[0]);
         end = parseInt(end.split(':')[0]);
 
-        if (start < 9 || start == end) {
+        if (start < 9 || start === end) {
             return false;
         } else {
             return [start, end];
@@ -60,7 +60,7 @@ function testSite(string) {
 
 function checkInput(string) {
 
-    if (string == '\n') {
+    if (string === '\n') {
         return;
     }
 
@@ -76,6 +76,10 @@ function checkInput(string) {
             for(var i = 0; i<userInput.length;i++){
                 var isExistDate = userInput[i].indexOf(arr[1]);
                 var isSameSite = userInput[i].indexOf(arr[3]);
+
+                if(userInput[i].split(' ').length === 5){
+                    break;
+                }
 
                 if(~isExistDate && ~isSameSite){
 
