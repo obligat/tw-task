@@ -36,6 +36,7 @@ U002 2017-09-22 09:00~22:00 B
 ```
 
 1. 运行 npm run test 截图
+
 ![](http://upload-images.jianshu.io/upload_images/2793567-2149b70af1f6afed.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 ![](http://upload-images.jianshu.io/upload_images/2793567-8bcdbf78d75aec11.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 ![](http://upload-images.jianshu.io/upload_images/2793567-90bc67815648741e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
