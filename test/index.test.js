@@ -1,7 +1,7 @@
-var chai = require('chai');
-var assert = chai.assert;
-var method = require('../index.js');
-var moment = require('moment');
+let chai = require('chai');
+let assert = chai.assert;
+let method = require('../index.js');
+let moment = require('moment');
 
 describe('检测选择的日期是否是今天或未来的某一天', function() {
 

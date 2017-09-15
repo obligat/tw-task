@@ -1,21 +1,22 @@
-var repl = require('repl');
+let repl = require('repl');
 
-var method = require('./index.js');
+let method = require('./index.js');
 
-const r = repl.start({
+repl.start({
     prompt: '',
     eval: myEval
-})
+});
 
 function myEval(cmd, context, filename, callback) {
-    var promp = method.checkInput(cmd.trim());
+    let promp = method.checkInput(cmd.trim());
     if (promp && cmd !== '\n') {
 
         console.log('> ' + promp);
     }
-    if (cmd == '\n') {
+    if (cmd === '\n') {
         method.calcuTotalMoney(method.output);
         console.log(method.formatOutput(method.output));
+        method.output = method.resetOutput();
     }
     callback(null);
 }

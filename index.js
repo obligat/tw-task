@@ -1,38 +1,32 @@
-var moment = require('moment');
+let moment = require('moment');
 
-var today = moment().format('YYYY-MM-DD');
+let today = moment().format('YYYY-MM-DD');
 
-var userInput = [];
-var output = [{ A: [] }, { B: [] }, { C: [] }, { D: [] }];
+let userInput = [];
+let output = [{A: []}, {B: []}, {C: []}, {D: []}];
 
 function isValidDate(date) {
-    if (moment(date).isSame(today) || moment(date).isAfter(today)) {
-        return true;
-    } else {
-        return false;
-    }
+
+    let bool = moment(date).isSame(today) || moment(date).isAfter(today);
+    return bool ? true : false;
 }
 
 function isWeekDay() {
-    var day = moment().weekday();
-    if (day === 0 || day === 6) {
-        return true;
-    } else {
-        return false;
-    }
+
+    let day = moment().weekday();
+    return (day === 0 || day === 6) ? true : false;
 }
 
 function isValidUserId(string) {
-    var reg = /(^U\d+$)/g;
+    let reg = /(^U\d+$)/g;
     return reg.test(string);
 }
 
 function testTimeFragment(string) {
-    var reg = /^(\d+):00~(\d+):00$/g;
+    let reg = /^(\d+):00~(\d+):00$/g;
 
     if (reg.test(string)) {
-        var arr = string.split('~');
-        var start = arr[0],
+        let arr = string.split('~'), start = arr[0],
             end = arr[1];
         start = parseInt(start.split(':')[0]);
         end = parseInt(end.split(':')[0]);
@@ -50,7 +44,7 @@ function testTimeFragment(string) {
 }
 
 function testSite(string) {
-    var reg = /^[ABCD]$/g;
+    let reg = /^[ABCD]$/g;
     if (reg.test(string)) {
         return string;
     } else {
@@ -64,28 +58,29 @@ function checkInput(string) {
         return;
     }
 
-    var str = string.trim();
-    var arr = str.split(' ');
-    var bool = isWeekDay();
+    let str = string.trim();
+    let arr = str.split(' ');
+    let bool = isWeekDay();
 
     if (arr.length === 4) {
+
         if (isValidUserId(arr[0]) && isValidDate(arr[1]) && testTimeFragment(arr[2]) && testSite(arr[3])) {
 
-            var timeFrag = testTimeFragment(arr[2]);
+            let timeFrag = testTimeFragment(arr[2]);
 
-            for(var i = 0; i<userInput.length;i++){
-                var isExistDate = userInput[i].indexOf(arr[1]);
-                var isSameSite = userInput[i].indexOf(arr[3]);
+            for (let i = 0; i < userInput.length; i++) {
+                let isExistDate = userInput[i].indexOf(arr[1]);
+                let isSameSite = userInput[i].indexOf(arr[3]);
 
-                if(userInput[i].split(' ').length === 5){
+                if (userInput[i].split(' ').length === 5) {
                     break;
                 }
 
-                if(~isExistDate && ~isSameSite){
+                if (~isExistDate && ~isSameSite) {
 
-                    var existTimeFrag = testTimeFragment(userInput[i].split(' ')[2]);
+                    let existTimeFrag = testTimeFragment(userInput[i].split(' ')[2]);
 
-                    if(!(timeFrag[1] <= existTimeFrag[0] || timeFrag[0] >= existTimeFrag[1]) ){
+                    if (!(timeFrag[1] <= existTimeFrag[0] || timeFrag[0] >= existTimeFrag[1])) {
 
                         return 'Error: the booking conflicts with existing bookings!'
                     }
@@ -93,10 +88,10 @@ function checkInput(string) {
             }
 
 
-            var money = calcuMoney(...testTimeFragment(arr[2]), bool);
-            var outputStr = [arr[1], arr[2], money + '元'].join(' ');
-            output.forEach(function(item) {
-                var key = Object.keys(item)[0];
+            let money = calcuMoney(...testTimeFragment(arr[2]), bool);
+            let outputStr = [arr[1], arr[2], money + '元'].join(' ');
+            output.forEach(item =>{
+                let key = Object.keys(item)[0];
                 if (key === arr[3]) {
                     item[key].push(outputStr);
                 }
@@ -110,30 +105,30 @@ function checkInput(string) {
         }
     } else if (arr.length === 5 && arr[4] === 'C') {
 
-        var isCanceled = userInput.find(item=>item === string);
-        if(isCanceled){
+        let isCanceled = userInput.find(item => item === string);
+        if (isCanceled) {
             return 'Error: the booking being cancelled does not exist!';
         }
 
-        var oldStr = string.slice(0, -2);
-        var oldSite = arr[3];
-        var isFind = userInput.indexOf(oldStr);
+        let oldStr = string.slice(0, -2);
+        let oldSite = arr[3];
+        let isFind = userInput.indexOf(oldStr);
 
         if (~isFind) {
             userInput[isFind] = string;
 
-            output.forEach(function(item) {
-                var key = Object.keys(item)[0];
+            output.forEach(item => {
+                let key = Object.keys(item)[0];
 
                 if (key === oldSite) {
-                    var replacedItemIndex = item[key].map(function(i, index) {
-                        var cancel = i.indexOf([arr[1], arr[2]].join(' '));
+                    let replacedItemIndex = item[key].map((i, index) => {
+                        let cancel = i.indexOf([arr[1], arr[2]].join(' '));
                         if (~cancel) {
                             return index;
                         }
                     }).find(k => k);
 
-                    var fee = calcuMoney(...testTimeFragment(arr[2]), bool);
+                    let fee = calcuMoney(...testTimeFragment(arr[2]), bool);
 
                     if (bool) {
                         fee = fee * 0.25;
@@ -156,9 +151,9 @@ function checkInput(string) {
 }
 
 function calcuMoney(start, end, isWeekDay) {
-    var count = end - start;
-    var remainder = count;
-    var money = 0;
+    let count = end - start;
+    let remainder = count;
+    let money = 0;
     if (!isWeekDay) {
         switch (true) {
 
@@ -172,7 +167,7 @@ function calcuMoney(start, end, isWeekDay) {
                 money = (12 - start) * 30;
                 remainder = count - (12 - start);
 
-            case start >= 12 && start < 18:
+            case (start >= 12 && start < 18):
 
                 if (remainder <= 6 && end < 18) {
                     money += remainder * 50;
@@ -193,7 +188,7 @@ function calcuMoney(start, end, isWeekDay) {
                 }
                 remainder = count - (18 - start);
 
-            case start >= 18 && start < 20:
+            case (start >= 18 && start < 20):
 
                 if (remainder <= 2 && end < 20) {
                     money += remainder * 80;
@@ -212,7 +207,7 @@ function calcuMoney(start, end, isWeekDay) {
                 }
                 remainder = count - (20 - start);
 
-            case start >= 20 && start < 22:
+            case (start >= 20 && start < 22):
 
                 if (remainder <= 2) {
                     money += remainder * 60;
@@ -232,7 +227,7 @@ function calcuMoney(start, end, isWeekDay) {
                 money = (12 - start) * 40;
                 remainder = count - (12 - start);
 
-            case start >= 12 && start < 18:
+            case (start >= 12 && start < 18):
 
                 if (remainder <= 6 && end < 18) {
                     money += remainder * 50;
@@ -253,7 +248,7 @@ function calcuMoney(start, end, isWeekDay) {
                 }
                 remainder = count - (18 - start);
 
-            case start >= 18 && start < 22:
+            case (start >= 18 && start < 22):
 
                 if (remainder <= 4) {
                     money += remainder * 60;
@@ -266,14 +261,14 @@ function calcuMoney(start, end, isWeekDay) {
 }
 
 function calcuTotalMoney(output) {
-    var totalMoney = 0;
-    var reg = / (\d+)元$/;
+    let totalMoney = 0;
+    let reg = / (\d+)元$/;
 
-    output.forEach(function(item) {
-        var key = Object.keys(item)[0];
+    output.forEach(function (item) {
+        let key = Object.keys(item)[0];
         item['total' + key] = 0;
-        item[key].forEach(function(i) {
-            var result = reg.exec(i);
+        item[key].forEach(i => {
+            let result = reg.exec(i);
             item['total' + key] += parseInt(result[1]);
         });
 
@@ -283,37 +278,43 @@ function calcuTotalMoney(output) {
     return totalMoney;
 }
 
-output.forEach(item => {
-    var key = Object.keys(item)[0];
-    item[key].sort((a, b) => {
-        var aArr = a.split(' '),
-            bArr = b.split(' ');
-        var aTime = aArr[0],
-            bTime = bArr[0];
-        var isBefore = moment(aTime).isBefore(bTime);
-        if(isBefore){
-            return isBefore;
-        }else if(moment(aTime).isBefore(bTime)){
-            return testTimeFragment(aArr[1])[0] >= testTimeFragment(bArr[1][0]);
-        }
+function sortOutput(output) {
+    output.forEach(item => {
+        let key = Object.keys(item)[0];
+        item[key].sort((a, b) => {
 
-        return isBefore;
+            let aArr = a.split(' '),
+                bArr = b.split(' ');
+            let aTime = aArr[0],
+                bTime = bArr[0];
+            let isAfter = moment(aTime).isAfter(bTime);
+            let isSame = moment(aTime).isSame(bTime);
+            if (isSame) {
+                return testTimeFragment(aArr[1])[0] >= testTimeFragment(bArr[1][0]);
+            }
+
+            return isAfter;
+
+        });
 
     });
-});
+
+    return output;
+}
+
 
 function formatOutput(output) {
-    var str = '\n> 收入汇总\n';
+    let str = '\n> 收入汇总\n';
     str += '> ---\n';
-
+    output = sortOutput(output);
     output.forEach(item => {
-        var key = Object.keys(item)[0];
+        let key = Object.keys(item)[0];
         str += '> 场地:' + key + '\n';
 
         item[key].forEach(i => {
             str += '> ' + i + '\n';
         });
-        if (key == 'D') {
+        if (key === 'D') {
             str += '> 小计: ' + item['total' + key] + '元\n';
         } else {
             str += '> 小计: ' + item['total' + key] + '元\n>\n';
@@ -325,6 +326,11 @@ function formatOutput(output) {
     return str;
 }
 
+function resetOutput() {
+    userInput = [];
+    return output = [{A: []}, {B: []}, {C: []}, {D: []}];
+}
+
 module.exports = {
     output,
     isValidDate,
@@ -334,5 +340,6 @@ module.exports = {
     calcuMoney,
     calcuTotalMoney,
     checkInput,
-    formatOutput
+    formatOutput,
+    resetOutput
 };
