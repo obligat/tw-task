@@ -10,7 +10,7 @@ describe('检测选择的日期是否是今天或未来的某一天', function()
     });
 
     it('选择今天,返回true', function() {
-        var today = moment().format('YYYY-MM-DD');
+        let today = moment().format('YYYY-MM-DD');
         assert.equal(method.isValidDate(today), true);
     });
 
@@ -247,8 +247,8 @@ describe('计算各时间段的价格', function() {
 });
 
 describe('计算总价格', function() {
-    it('以上的输出总价为790元', function() {
-        assert.equal(method.calcuTotalMoney(method.output), 790);
+    it('以上的输出总价为750元', function() {
+        assert.equal(method.calcuTotalMoney(method.output), 750);
     });
 });
 
@@ -258,12 +258,12 @@ describe('格式化输出', function() {
 > ---
 > 场地:A
 > 2017-09-22 20:00~21:00 60元
-> 2017-10-22 20:00~22:00 违约金 60元
-> 小计: 120元
+> 2017-10-22 20:00~22:00 违约金 30元
+> 小计: 90元
 >
 > 场地:B
-> 2017-09-22 09:00~22:00 670元
-> 小计: 670元
+> 2017-09-22 09:00~22:00 660元
+> 小计: 660元
 >
 > 场地:C
 > 小计: 0元
@@ -271,6 +271,6 @@ describe('格式化输出', function() {
 > 场地:D
 > 小计: 0元
 > ---
-> 总计: 790元`);
+> 总计: 750元`);
     })
 });
