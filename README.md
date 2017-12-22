@@ -1,6 +1,6 @@
-# ThoughtWorks 2018校园招聘作业
+# repl 选择场地
 
-如何运行本作业
+如何运行
 ---
 
 1. git clone git@github.com:obligat/tw-task.git
