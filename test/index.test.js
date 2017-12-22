@@ -5,8 +5,8 @@ let moment = require('moment');
 
 describe('检测选择的日期是否是今天或未来的某一天', function() {
 
-    it('选择未来的某一天（如2017-09-23） 返回true', function() {
-        assert.equal(method.isValidDate('2017-09-23'), true);
+    it('选择未来的某一天（如2017-12-30） 返回true', function() {
+        assert.equal(method.isValidDate('2017-12-30'), true);
     });
 
     it('选择今天,返回true', function() {
@@ -88,28 +88,28 @@ describe('判断场地是否正确（A|B|C|D）', function() {
 });
 
 describe('判断用户输入是否正确', function() {
-    it('{U002 2017-09-22 20:00~21:00 A} 应该为 success ', function() {
-        assert.equal(method.checkInput('U002 2017-09-22 20:00~21:00 A'), 'Success: the booking is accepted!')
+    it('{U002 2018-09-22 20:00~21:00 A} 应该为 success ', function() {
+        assert.equal(method.checkInput('U002 2018-09-22 20:00~21:00 A'), 'Success: the booking is accepted!')
     });
 
-    it('{U002 2017-09-22 10:00~22:00 A} 应该为 error ', function() {
-        assert.equal(method.checkInput('U002 2017-09-22 10:00~22:00 A'), 'Error: the booking conflicts with existing bookings!')
+    it('{U002 2018-09-22 10:00~22:00 A} 应该为 error ', function() {
+        assert.equal(method.checkInput('U002 2018-09-22 10:00~22:00 A'), 'Error: the booking conflicts with existing bookings!')
     });
 
-    it('{U002 2017-09-22 09:00~22:00 B} 应该为 success ', function() {
-        assert.equal(method.checkInput('U002 2017-09-22 09:00~22:00 B'), 'Success: the booking is accepted!')
+    it('{U002 2018-09-22 09:00~22:00 B} 应该为 success ', function() {
+        assert.equal(method.checkInput('U002 2018-09-22 09:00~22:00 B'), 'Success: the booking is accepted!')
     });
 
-    it('{U013 2017-10-22 20:00~22:00 A} 应该为 success ', function() {
-        assert.equal(method.checkInput('U013 2017-10-22 20:00~22:00 A'), 'Success: the booking is accepted!')
+    it('{U013 2018-10-22 20:00~22:00 A} 应该为 success ', function() {
+        assert.equal(method.checkInput('U013 2018-10-22 20:00~22:00 A'), 'Success: the booking is accepted!')
     });
 
-    it('{U013 2017-10-22 20:00~22:00 A C} 应该为 success ', function() {
-        assert.equal(method.checkInput('U013 2017-10-22 20:00~22:00 A C'), 'Success: the booking is accepted!')
+    it('{U013 2018-10-22 20:00~22:00 A C} 应该为 success ', function() {
+        assert.equal(method.checkInput('U013 2018-10-22 20:00~22:00 A C'), 'Success: the booking is accepted!')
     });
 
-    it('{U013 2017-10-22 20:00~22:00 A C} 应该为 error ', function() {
-        assert.equal(method.checkInput('U013 2017-10-22 20:00~22:00 A C'), 'Error: the booking being cancelled does not exist!')
+    it('{U013 2018-10-22 20:00~22:00 A C} 应该为 error ', function() {
+        assert.equal(method.checkInput('U013 2018-10-22 20:00~22:00 A C'), 'Error: the booking being cancelled does not exist!')
     });
 
     it('{U323 2017-09-22 08:00~22:00 D} 应该为 error ', function() {
@@ -247,8 +247,8 @@ describe('计算各时间段的价格', function() {
 });
 
 describe('计算总价格', function() {
-    it('以上的输出总价为750元', function() {
-        assert.equal(method.calcuTotalMoney(method.output), 750);
+    it('以上的输出总价为790元', function() {
+        assert.equal(method.calcuTotalMoney(method.output), 790);
     });
 });
 
@@ -257,13 +257,13 @@ describe('格式化输出', function() {
         assert.equal(method.formatOutput(method.output), `\n> 收入汇总
 > ---
 > 场地:A
-> 2017-09-22 20:00~21:00 60元
-> 2017-10-22 20:00~22:00 违约金 30元
-> 小计: 90元
+> 2018-09-22 20:00~21:00 60元
+> 2018-10-22 20:00~22:00 违约金 60元
+> 小计: 120元
 >
 > 场地:B
-> 2017-09-22 09:00~22:00 660元
-> 小计: 660元
+> 2018-09-22 09:00~22:00 670元
+> 小计: 670元
 >
 > 场地:C
 > 小计: 0元
@@ -271,6 +271,6 @@ describe('格式化输出', function() {
 > 场地:D
 > 小计: 0元
 > ---
-> 总计: 750元`);
+> 总计: 790元`);
     })
 });
